@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=19b5c44dd600b05d43b5bb78ad0bd491"
 inherit qt6-cmake pkgconfig
 
 BRANCH = "main"
-SRC_URI = "git://github.com/DanielMartensson/meta-imtube.git;branch=${BRANCH};subdir=src"
+SRC_URI = "git://github.com/DanielMartensson/meta-imtube.git;branch=${BRANCH};subdir=src;protocol=https"
 # Pin after the first push; ${AUTOREV} resolves against the HEAD commit.
 SRCREV = "${AUTOREV}"
 
