@@ -82,9 +82,23 @@ meta-imtube/
 
 ## Requirements
 
+### Meta-layer dependencies
+
+This layer builds on top of the following layers (all must be enabled in
+`bblayers.conf`, in order):
+
+| Layer                       | Collection    | Needed for                                                        |
+|-----------------------------|---------------|-------------------------------------------------------------------|
+| OpenEmbedded-Core (`meta`)  | `core`        | Build fundamentals; the base `gstreamer1.0` / `gstreamer1.0-plugins-base` / `gstreamer1.0-plugins-good` recipes |
+| `meta-qt6`                  | `qt6-layer`   | `qt6-cmake.bbclass`, `qtbase`, `qtdeclarative`, `qtwayland`, `qtshadertools` |
+| `meta-openembedded` (`meta-multimedia`) | `meta-multimedia` | `ffmpeg` – required at runtime by `yt-dlp` (skip if your BSP already provides `ffmpeg`) |
+
+The hard dependency on `qt6-layer` is enforced in `conf/layer.conf`
+(`LAYERDEPENDS_imtube = "qt6-layer"`).
+
+### Other requirements
+
 - BitBake / OpenEmbedded, Yocto **Scarthgap** (or later)
-- **meta-qt6** – Qt 6.8.x recipes (`qt6-layer`). Provides
-  `qt6-cmake.bbclass` and the Qt packages used below.
 - GStreamer 1.26.x with `gst-plugins-good` and `gst-plugins-base`
 - Recommended `DISTRO_FEATURES`: `opengl`, `wayland`, `vulkan`
 
