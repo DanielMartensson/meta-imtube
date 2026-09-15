@@ -61,11 +61,18 @@ meta-imtube/
 ├── conf/
 │   └── layer.conf                        # collection "imtube", depends on qt6-layer
 ├── recipes-devtools/
+│   ├── meson/
+│   │   └── meson_1.5.2.bb                # pinned build tool (needed by GStreamer)
 │   └── python/yt-dlp/
 │       └── yt-dlp_2026.08.19.bb          # standalone aarch64 binary
 ├── recipes-multimedia/
 │   ├── gstreamer/
-│   │   └── gstreamer1.0-plugins-good_%.bbappend   # enables the Qt6 QML sink
+│   │   ├── gstreamer1.0_1.26.11.bb               # GStreamer core 1.26.11
+│   │   ├── gstreamer1.0-plugins-base_1.26.11.bb  # base plugins
+│   │   ├── gstreamer1.0-plugins-good_1.26.11.bb  # good plugins (incl. Qt6 QML sink)
+│   │   ├── gstreamer1.0-plugins-common.inc
+│   │   ├── gstreamer1.0-plugins-packaging.inc
+│   │   └── gstreamer1.0-plugins-good_%.bbappend  # enables the Qt6 QML sink
 │   ├── imtube-qt/
 │   │   └── imtube-qt_git.bb              # the Qt6 client (fetches from this repo)
 │   └── packagegroups/
@@ -144,6 +151,22 @@ imtube-qt
 ---
 
 ## What the layer builds
+
+### GStreamer 1.26.11 + Meson 1.5.2
+
+The layer **ships its own GStreamer stack** (`gstreamer1.0`,
+`gstreamer1.0-plugins-base`, `gstreamer1.0-plugins-good`, all `1.26.11`) and a
+matching pinned **Meson 1.5.2**, so it is self-contained even when the BSP /
+OE-core only carries an older GStreamer. BitBake picks the highest available
+version by default; pin explicitly if your distro sets conflicting
+preferences:
+
+```bitbake
+PREFERRED_VERSION_gstreamer1.0           = "1.26.11"
+PREFERRED_VERSION_gstreamer1.0-plugins-base = "1.26.11"
+PREFERRED_VERSION_gstreamer1.0-plugins-good = "1.26.11"
+PREFERRED_VERSION_meson                   = "1.5.2"
+```
 
 ### `imtube-qt`
 
