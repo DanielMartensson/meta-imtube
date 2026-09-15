@@ -35,15 +35,16 @@ Seeking restarts the download with `--download-sections "*H:MM:SS-"`.
 - **Hardware acceleration only.** The platform hardware decoder is
   auto-plugged (`v4l2slh264dec`/`v4l2h264dec`, ...) or forced in Settings.
   `decodebin` falls back gracefully if a forced decoder is unavailable.
-- **Vulkan ready.** The renderer is auto-detected at startup:
+- **Vulkan by default.** The renderer is auto-detected at startup. This layer
+  ships GStreamer **1.28.7**, which includes `qml6vulkansink`:
 
-  | GStreamer stack                    | Scene graph API  | Sink used          |
-  |------------------------------------|------------------|--------------------|
-  | has `qml6vulkansink` (≥ 1.28)      | **Vulkan**        | `qml6vulkansink`    |
-  | otherwise (1.26.x, this layer)     | OpenGL / OpenGL ES | `qml6glsink`      |
+  | Sink registered at runtime          | Scene graph API  | Sink used          |
+  |-------------------------------------|------------------|--------------------|
+  | `qml6vulkansink` + Vulkan QSG (Qt `vulkan` DISTRO_FEATURE) | **Vulkan** | `qml6vulkansink` |
+  | otherwise                           | OpenGL / OpenGL ES | `qml6glsink`      |
 
-  Switch to a GStreamer build ≥ 1.28 and Vulkan turns on automatically – no
-  layer changes needed.
+  No configuration is needed: the app prefers Vulkan when the Qt scene graph
+  runs on Vulkan and falls back to the OpenGL/EGL sink automatically.
 - **YouTube search** (`ytsearchN:`), play, pause, seek, volume/mute.
 - **Library** – favorites persisted via `QSettings` (JSON), with local
   thumbnail caching.
@@ -67,9 +68,9 @@ meta-imtube/
 │       └── yt-dlp_2026.08.19.bb          # standalone aarch64 binary
 ├── recipes-multimedia/
 │   ├── gstreamer/
-│   │   ├── gstreamer1.0_1.26.11.bb               # GStreamer core 1.26.11
-│   │   ├── gstreamer1.0-plugins-base_1.26.11.bb  # base plugins
-│   │   ├── gstreamer1.0-plugins-good_1.26.11.bb  # good plugins (incl. Qt6 QML sink)
+│   │   ├── gstreamer1.0_1.28.7.bb               # GStreamer core 1.28.7
+│   │   ├── gstreamer1.0-plugins-base_1.28.7.bb  # base plugins
+│   │   ├── gstreamer1.0-plugins-good_1.28.7.bb  # good plugins (incl. Qt6 QML/Vulkan sink)
 │   │   ├── gstreamer1.0-plugins-common.inc
 │   │   ├── gstreamer1.0-plugins-packaging.inc
 │   │   └── gstreamer1.0-plugins-good_%.bbappend  # enables the Qt6 QML sink
@@ -106,7 +107,7 @@ The hard dependency on `qt6-layer` is enforced in `conf/layer.conf`
 ### Other requirements
 
 - BitBake / OpenEmbedded, Yocto **Scarthgap** (or later)
-- GStreamer 1.26.x with `gst-plugins-good` and `gst-plugins-base`
+- GStreamer 1.28.x with `gst-plugins-good` and `gst-plugins-base`
 - Recommended `DISTRO_FEATURES`: `opengl`, `wayland`, `vulkan`
 
 ---
@@ -152,19 +153,19 @@ imtube-qt
 
 ## What the layer builds
 
-### GStreamer 1.26.11 + Meson 1.5.2
+### GStreamer 1.28.7 + Meson 1.5.2
 
 The layer **ships its own GStreamer stack** (`gstreamer1.0`,
-`gstreamer1.0-plugins-base`, `gstreamer1.0-plugins-good`, all `1.26.11`) and a
+`gstreamer1.0-plugins-base`, `gstreamer1.0-plugins-good`, all `1.28.7`) and a
 matching pinned **Meson 1.5.2**, so it is self-contained even when the BSP /
 OE-core only carries an older GStreamer. BitBake picks the highest available
 version by default; pin explicitly if your distro sets conflicting
 preferences:
 
 ```bitbake
-PREFERRED_VERSION_gstreamer1.0           = "1.26.11"
-PREFERRED_VERSION_gstreamer1.0-plugins-base = "1.26.11"
-PREFERRED_VERSION_gstreamer1.0-plugins-good = "1.26.11"
+PREFERRED_VERSION_gstreamer1.0           = "1.28.7"
+PREFERRED_VERSION_gstreamer1.0-plugins-base = "1.28.7"
+PREFERRED_VERSION_gstreamer1.0-plugins-good = "1.28.7"
 PREFERRED_VERSION_meson                   = "1.5.2"
 ```
 

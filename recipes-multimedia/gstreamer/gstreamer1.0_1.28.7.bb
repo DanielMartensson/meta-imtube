@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=69333daa044cb77e486cc36129f7a770 \
 S = "${WORKDIR}/gstreamer-${PV}"
 
 SRC_URI = "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz"
-SRC_URI[sha256sum] = "2e0bd192d0438ea606a6f76a95c8e16542167656ffec2c2bc3aaf6ee0837fbf6"
+SRC_URI[sha256sum] = "787329b2c5758e228a71d926a6dcf960bceaacca3cadd63874ba665dfcda013e"
 
 PACKAGECONFIG ??= " \
     debug \
