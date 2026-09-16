@@ -9,7 +9,7 @@ SRC_URI = " \
     https://raw.githubusercontent.com/yt-dlp/yt-dlp/2026.08.19/LICENSE;name=license;unpack=0 \
 "
 
-SRC_URI[sha256sum] = "b16e4dab368a816cd05d477d698a605a6ae87ccee1c8ffd38fa21d7254141fcc"
+SRC_URI[yt-dlp-bin.sha256sum] = "b16e4dab368a816cd05d477d698a605a6ae87ccee1c8ffd38fa21d7254141fcc"
 SRC_URI[license.sha256sum] = "7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c"
 
 S = "${WORKDIR}"
