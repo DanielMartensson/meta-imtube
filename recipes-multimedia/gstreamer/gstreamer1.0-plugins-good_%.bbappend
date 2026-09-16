@@ -20,7 +20,25 @@ PACKAGECONFIG[qt6] = "-Dqt6=enabled \
                       -Dqt-wayland=${QT6WAYLAND} \
                       -Dqt-x11=disabled, \
                       -Dqt6=disabled, \
-                      qtbase qtdeclarative qtbase-native qtdeclarative-native qtshadertools-native ${QT6WAYLANDDEPENDS}"
+                      qtbase qtdeclarative qtbase-native qtdeclarative-native qtshadertools-native qttools-native ${QT6WAYLANDDEPENDS}"
+
+# meta-qt6 installs the Qt6 host tools (moc/uic/rcc/lrelease) in the native
+# sysroot without a -qt6 suffix; meson's qt6 module looks them up as
+# <tool>-qt6 on PATH (pkg-config detection). Provide tagged symlinks so the
+# qml6 sink builds. lrelease comes from qttools-native.
+do_configure:prepend() {
+    for t in moc uic rcc lrelease; do
+        for src in ${STAGING_BINDIR_NATIVE}/${t} \
+                   ${STAGING_LIBEXECDIR_NATIVE}/${t} \
+                   ${STAGING_LIBEXECDIR_NATIVE}/qt6/libexec/${t} \
+                   ${STAGING_LIBDIR_NATIVE}/qt6/libexec/${t}; do
+            if [ -e "${src}" ]; then
+                ln -sf "${src}" "${STAGING_BINDIR_NATIVE}/${t}-qt6"
+                break
+            fi
+        done
+    done
+}
 
 # The Qt6 plugin builds as libgstqml6.so; split it into its own package so
 # imtube-qt can depend on the sink explicitly.
