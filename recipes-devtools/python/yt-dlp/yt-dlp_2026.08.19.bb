@@ -21,3 +21,4 @@ do_install() {
 
 FILES:${PN} = "${bindir}/yt-dlp"
 RDEPENDS:${PN} = "ffmpeg"
+INSANE_SKIP:${PN} = "already-stripped"
