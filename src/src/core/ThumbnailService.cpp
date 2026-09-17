@@ -43,7 +43,7 @@ void ThumbnailService::request(const QString &videoId, const QString &remoteUrl)
         return;
     m_pending.insert(videoId);
 
-    QNetworkRequest request(QUrl(remoteUrl));
+    QNetworkRequest request{QUrl(remoteUrl)};
     request.setTransferTimeout(15000);
     QNetworkReply *reply = m_network.get(request);
     connect(reply, &QNetworkReply::finished, this, [this, reply, videoId, local]() {
