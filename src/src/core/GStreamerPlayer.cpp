@@ -374,7 +374,7 @@ bool GStreamerPlayer::offendingFactory() const
     const GstElement *const elems[] = { m_appsrc.load(), m_demux, m_videoQueue,
                                         m_audioQueue, m_videoSink, m_volume,
                                         m_h264parse, m_hwDecoder };
-    for (GstElement *e : elems) {
+    for (const GstElement *e : elems) {
         if (!e) {
             qCritical() << "ImTube: required GStreamer element could not be created";
             return true;
@@ -443,10 +443,12 @@ void GStreamerPlayer::runFeeder()
         GBytes *bytes = static_cast<GBytes *>(p);
         GstElement *a = m_appsrc.load();
         if (m_pipelineBuilt.load() && a) {
+            gsize dataSize = 0;
+            gconstpointer data = g_bytes_get_data(bytes, &dataSize);
             GstBuffer *buf = gst_buffer_new_wrapped_full(
                     GST_MEMORY_FLAG_READONLY,
-                    const_cast<gpointer>(g_bytes_get_data(bytes)),
-                    g_bytes_get_size(bytes), 0, g_bytes_get_size(bytes),
+                    const_cast<gpointer>(data),
+                    dataSize, 0, dataSize,
                     bytes, reinterpret_cast<GDestroyNotify>(g_bytes_unref));
             const GstFlowReturn fr = gst_app_src_push_buffer(GST_APP_SRC(a), buf);
             if (fr != GST_FLOW_OK && fr != GST_FLOW_FLUSHING)
@@ -594,11 +596,11 @@ gboolean GStreamerPlayer::onBusMessage(GstBus *bus, GstMessage *message, gpointe
 
     switch (GST_MESSAGE_TYPE(message)) {
     case GST_MESSAGE_ERROR: {
-        gchar *err = nullptr;
+        GError *err = nullptr;
         gchar *dbg = nullptr;
         gst_message_parse_error(message, &err, &dbg);
-        self->m_errorMessage = QString::fromUtf8(err);
-        g_free(err);
+        self->m_errorMessage = QString::fromUtf8(err->message);
+        g_error_free(err);
         g_free(dbg);
         emit self->errorMessageChanged();
         qCritical() << "ImTube: pipeline error:" << self->m_errorMessage;
