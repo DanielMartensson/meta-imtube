@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/DanielMartensson/meta-imtube.git;branch=${BRANCH};su
 # Pin after the first push; ${AUTOREV} resolves against the HEAD commit.
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git/src"
+S = "${WORKDIR}/src/src"
 
 DEPENDS = " \
     qtbase \
