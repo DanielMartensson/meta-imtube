@@ -14,6 +14,7 @@ S = "${WORKDIR}/src/src"
 DEPENDS = " \
     qtbase \
     qtdeclarative \
+    qtdeclarative-native \
     gstreamer1.0 \
     gstreamer1.0-plugins-base \
 "
