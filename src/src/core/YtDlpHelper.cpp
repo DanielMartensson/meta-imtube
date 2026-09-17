@@ -43,7 +43,7 @@ void YtDlpHelper::search(const QString &query)
 
     auto *proc = new QProcess(this);
     connect(proc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, [this, proc, query](int code, QProcess::ExitStatus status) {
+            this, [this, proc, query, max](int code, QProcess::ExitStatus status) {
                 const QByteArray out = proc->readAllStandardOutput();
                 const QByteArray err = proc->readAllStandardError();
                 proc->deleteLater();
