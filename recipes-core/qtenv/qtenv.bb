@@ -4,7 +4,7 @@ Qt 6 applications (imtube-qt, wpeqt, opennow) never run under the raw \"C\" \
 ASCII locale, which Qt refuses to use as its UTF-8 locale check fails."
 HOMEPAGE = "https://github.com/DanielMartensson/meta-imtube"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=838c366f69b72c5df05c96dff79b35f2"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 SRC_URI = "file://qtenv-locale.sh"
 
