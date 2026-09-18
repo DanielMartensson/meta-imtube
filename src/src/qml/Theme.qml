@@ -5,6 +5,10 @@ import QtQuick.Controls
 // instantiates `Theme {}` so colors always stay in sync.
 QtObject {
     id: root
+    // Qt 6's QtObject has no default property, so child objects (Connections,
+    // Timer, ...) would fail with "cannot assign to non-existent default
+    // property". Restore a data list to host declarative children.
+    default property list<QtObject> data
 
     property color bg
     property color surface
